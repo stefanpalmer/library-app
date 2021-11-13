@@ -9,6 +9,8 @@ import { NovelComponent } from './novel/novel.component';
 import { AnthologyComponent } from './anthology/anthology.component';
 import { LibraryComponent } from './library/library.component';
 import { DetailsComponent } from './details/details.component';
+import { AppRoutingModule } from './app-routing.module';
+import { BookService } from './shared/book.service';
 
 @NgModule({
   declarations: [
@@ -22,9 +24,10 @@ import { DetailsComponent } from './details/details.component';
     DetailsComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    AppRoutingModule
   ],
-  providers: [],
+  providers: [BookService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
