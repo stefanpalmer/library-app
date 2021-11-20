@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { BookService } from '../shared/book.service';
 
 @Component({
   selector: 'app-novel',
@@ -10,10 +12,17 @@ export class NovelComponent implements OnInit {
 
   novelForm!: FormGroup;
 
-  constructor() { }
+  constructor(private route: ActivatedRoute, 
+    private bookService: BookService,
+    private router: Router) { }
 
   ngOnInit(): void {
     this.initForm();
+  }
+
+  onSubmit() {
+    this.bookService.addBook(this.novelForm.value);
+    this.router.navigate(['../library'], {relativeTo: this.route});
   }
 
   private initForm() {
