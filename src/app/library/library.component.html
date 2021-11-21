@@ -20,11 +20,12 @@
                 <td>{{book.author}}</td>
                 <td>{{book.year}} ({{book.publisher}})</td>
                 <td>{{book.pages}}</td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td *ngIf="book.series">{{book.series}} #{{book.seriesnum}}</td>
+                <td *ngIf="!book.series"></td>
+                <td>{{book.isbn | substrIsbn}}</td>
+                <td>{{book.review | substrReview}}</td>
                 <td>
-                    <div>
+                    <div id="table-btns">
                         <button id="btn-info" class="btn btn-table">Info</button>
                         <button class="btn btn-edit btn-table">Edit</button>
                         <button id="btn-delete" class="btn" (click)="onDeleteBook(id)">X</button>

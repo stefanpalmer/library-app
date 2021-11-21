@@ -6,15 +6,22 @@
     color: #cecece;
 }
 
+#table-btns {
+    display: flex;
+    flex-direction: column;
+}
+
 #btn-info {
     background-color: #536271;
 }
 
 .btn-edit {
+    margin-top: 0.3rem;
     background-color: #84828F;
 }
 
 #btn-delete {
+    margin-top: 0.3rem;
     color: #c07e7e;
     font-size: 1.25rem;
     font-weight: 700;

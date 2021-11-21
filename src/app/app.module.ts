@@ -11,6 +11,8 @@ import { AnthologyComponent } from './anthology/anthology.component';
 import { LibraryComponent } from './library/library.component';
 import { DetailsComponent } from './details/details.component';
 import { AppRoutingModule } from './app-routing.module';
+import { SubIsbnPipe } from './substr-isbn.pipe';
+import { SubReviewPipe } from './substr-review.pipe';
 import { BookService } from './shared/book.service';
 
 @NgModule({
@@ -22,7 +24,9 @@ import { BookService } from './shared/book.service';
     NovelComponent,
     AnthologyComponent,
     LibraryComponent,
-    DetailsComponent
+    DetailsComponent,
+    SubIsbnPipe,
+    SubReviewPipe
   ],
   imports: [
     BrowserModule,
