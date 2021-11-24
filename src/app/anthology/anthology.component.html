@@ -1,4 +1,4 @@
-<form [formGroup]="anthologyForm">
+<form [formGroup]="anthologyForm" (ngSubmit)="onSubmit()">
     <h2>Anthology Entry</h2>
     <div class="row">
         <div class="col-sm-5">
@@ -7,7 +7,7 @@
         </div>
         <div class="col-sm-5">
             <label for="editor" class="form-label">Editor</label>
-            <input type="text" id="editor" class="form-control" formControlName="editor">
+            <input type="text" id="editor" class="form-control" formControlName="author">
         </div>
     </div>
     <div class="row">
@@ -50,7 +50,7 @@
                     <input type="text" class="form-control" formControlName="author">
                 </div>
                 <div class="col-sm-2">
-                    <button type="button" class="btn">X</button>
+                    <button type="button" class="btn" (click)="onDeleteStory(i)">X</button>
                 </div>
             </div>
         </div>

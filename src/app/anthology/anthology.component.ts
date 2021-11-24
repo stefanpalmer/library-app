@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormArray, FormControl } from '@angular/forms';
 import { BookService } from '../shared/book.service';
-
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-anthology',
@@ -13,7 +13,7 @@ export class AnthologyComponent implements OnInit {
   id!: number;
   anthologyForm!: FormGroup;
 
-  constructor() { }
+  constructor(private bookService: BookService, private router: Router) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -23,6 +23,11 @@ export class AnthologyComponent implements OnInit {
     return (<FormArray>this.anthologyForm.get('stories')).controls;
   }
 
+  onSubmit() {
+    this.bookService.addBook(this.anthologyForm.value);
+    this.router.navigate(['../library']);
+  }
+
   onAddStory() {
     (<FormArray>this.anthologyForm.get('stories')).push(
       new FormGroup({
@@ -30,6 +35,10 @@ export class AnthologyComponent implements OnInit {
         'author': new FormControl(null)
       })
     );
+  }
+
+  onDeleteStory(index: number) {
+    (<FormArray>this.anthologyForm.get('stories')).removeAt(index);
   }
 
   private initForm() {
@@ -44,7 +53,7 @@ export class AnthologyComponent implements OnInit {
 
     this.anthologyForm = new FormGroup ({
       'title': new FormControl(anthologyTitle),
-      'editor': new FormControl(anthologyEditor),
+      'author': new FormControl(anthologyEditor),
       'publisher': new FormControl(anthologyPublisher),
       'year': new FormControl(anthologyYear),
       'pages': new FormControl(anthologyPages),
