@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormArray, FormControl } from '@angular/forms';
 import { BookService } from '../shared/book.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'app-anthology',
@@ -11,12 +11,21 @@ import { Router } from '@angular/router';
 
 export class AnthologyComponent implements OnInit {
   id!: number;
+  editMode = false;
   anthologyForm!: FormGroup;
 
-  constructor(private bookService: BookService, private router: Router) { }
+  constructor(private route: ActivatedRoute, 
+    private bookService: BookService, 
+    private router: Router) { }
 
   ngOnInit(): void {
-    this.initForm();
+    this.route.params.subscribe(
+      (params: Params) => {
+        this.id = +params['id'];
+        this.editMode = params['id'] != null;
+        this.initForm();
+      }
+    )
   }
 
   getControls() {
@@ -24,8 +33,21 @@ export class AnthologyComponent implements OnInit {
   }
 
   onSubmit() {
-    this.bookService.addBook(this.anthologyForm.value);
-    this.router.navigate(['../library']);
+    if (this.editMode) {
+      this.bookService.updateBook(this.id, this.anthologyForm.value);
+      this.router.navigate(['../..'], {relativeTo: this.route});
+    } else {
+      this.bookService.addBook(this.anthologyForm.value);
+      this.router.navigate(['../library'], {relativeTo: this.route});
+    }
+  }
+
+  onCancelNew() {
+    this.router.navigate(['../start'], {relativeTo: this.route});
+  }
+
+  onCancelEdit() {
+    this.router.navigate(['../..'], {relativeTo: this.route});
   }
 
   onAddStory() {
@@ -51,6 +73,27 @@ export class AnthologyComponent implements OnInit {
     let anthologyStories = new FormArray([]);
     let anthologyReview = '';
 
+    if (this.editMode) {
+      const book = this.bookService.getBook(this.id);
+      anthologyTitle = book.title;
+      anthologyEditor = book.author;
+      anthologyPublisher = book.publisher;
+      anthologyYear = book.year;
+      anthologyPages = book.pages;
+      anthologyIsbn = book.isbn;
+      if (book['stories']) {
+        for (let story of book.stories) {
+          anthologyStories.push(
+            new FormGroup ({
+              'title': new FormControl(story.title),
+              'author': new FormControl(story.author)
+            })
+          );
+        }
+      }
+      anthologyReview = book.review;
+    }
+
     this.anthologyForm = new FormGroup ({
       'title': new FormControl(anthologyTitle),
       'author': new FormControl(anthologyEditor),
@@ -61,7 +104,6 @@ export class AnthologyComponent implements OnInit {
       'stories': anthologyStories,
       'review': new FormControl(anthologyReview)
     });
+
   }
-
-
 }

@@ -63,10 +63,12 @@
     </div>
     <div id="anthology-buttons">
         <div>
-            <button class="btn btn-submit" type="submit">Add</button>
+            <button *ngIf="!editMode" class="btn btn-submit" type="submit">Add</button>
+            <button *ngIf="editMode" class="btn btn-submit" type="submit">Update</button>
         </div>
         <div>
-            <button class="btn btn-cancel">Cancel</button>
+            <button *ngIf="!editMode" class="btn btn-cancel" (click)="onCancelNew()">Cancel</button>
+            <button *ngIf="editMode" class="btn btn-cancel" (click)="onCancelEdit()">Cancel</button>
         </div>
     </div>
 

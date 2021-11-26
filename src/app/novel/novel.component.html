@@ -47,10 +47,12 @@
     </div>
     <div id="novel-buttons">
         <div>
-            <button class="btn btn-submit" type="submit">Add</button>
+            <button *ngIf="!editMode" class="btn btn-submit" type="submit">Add</button>
+            <button *ngIf="editMode" class="btn btn-submit" type="submit">Update</button>
         </div>
         <div>
-            <button class="btn btn-clear">Cancel</button>
+            <button *ngIf="!editMode" (click)="onCancelNew()" class="btn btn-clear">Cancel</button>
+            <button *ngIf="editMode" (click)="onCancelEdit()" class="btn btn-clear">Cancel</button>
         </div>
     </div>
 </form>

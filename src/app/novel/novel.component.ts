@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { Book } from '../shared/book.model';
 import { BookService } from '../shared/book.service';
 
 @Component({
@@ -10,6 +12,10 @@ import { BookService } from '../shared/book.service';
 })
 export class NovelComponent implements OnInit {
 
+  subscription!: Subscription;
+  editedBook!: Book;
+  editedNumberIndex!: number;
+  editMode = false;
   novelForm!: FormGroup;
 
   constructor(private route: ActivatedRoute, 
@@ -17,12 +23,31 @@ export class NovelComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-    this.initForm();
+    this.subscription = this.route.params.subscribe(
+      (params: Params) => {
+        this.editedNumberIndex = +params['id'];
+        this.editMode = params['id'] != null;
+        this.initForm();
+      }
+    )
   }
 
   onSubmit() {
-    this.bookService.addBook(this.novelForm.value);
-    this.router.navigate(['../library'], {relativeTo: this.route});
+    if (this.editMode) {
+      this.bookService.updateBook(this.editedNumberIndex, this.novelForm.value);
+      this.router.navigate(['../..'], {relativeTo: this.route});
+    } else {
+      this.bookService.addBook(this.novelForm.value);
+      this.router.navigate(['../library'], {relativeTo: this.route});
+    }
+  }
+
+  onCancelNew() {
+    this.router.navigate(['../start'], {relativeTo: this.route});
+  }
+
+  onCancelEdit() {
+    this.router.navigate(['../..'], {relativeTo: this.route});
   }
 
   private initForm() {
@@ -36,6 +61,20 @@ export class NovelComponent implements OnInit {
     let novelStories = new FormArray([]);
     let novelIsbn = '';
     let novelReview = '';
+
+    if (this.editMode) {
+      const book = this.bookService.getBook(this.editedNumberIndex);
+      novelTitle = book.title;
+      novelAuthor = book.author;
+      novelPublisher = book.publisher;
+      novelYear = book.year;
+      novelPages = book.pages;
+      novelSeries = book.series;
+      novelSeriesNum = book.seriesnum;
+      novelStories;
+      novelIsbn = book.isbn;
+      novelReview = book.review;
+    }
     
     this.novelForm = new FormGroup({
       'title': new FormControl(novelTitle),
@@ -44,7 +83,7 @@ export class NovelComponent implements OnInit {
       'year': new FormControl(novelYear),
       'pages': new FormControl(novelPages),
       'series': new FormControl(novelSeries),
-      'seriesNum': new FormControl(novelSeriesNum),
+      'seriesnum': new FormControl(novelSeriesNum),
       'stories': novelStories,
       'isbn': new FormControl(novelIsbn),
       'review': new FormControl(novelReview)

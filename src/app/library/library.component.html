@@ -18,16 +18,18 @@
                 <td>{{id + 1}}</td>
                 <td>{{book.title}}</td>
                 <td>{{book.author}}</td>
-                <td>{{book.year}} ({{book.publisher}})</td>
+                <td>{{book.publisher}} ({{book.year}})</td>
                 <td>{{book.pages}}</td>
-                <td *ngIf="book.series">{{book.series}} #{{book.seriesnum}}</td>
-                <td *ngIf="!book.series"></td>
+                <td *ngIf="book.series && book.stories.length == 0">{{book.series}} #{{book.seriesnum}}</td>
+                <td *ngIf="!book.series && book.stories.length == 0"></td>
+                <td *ngIf="book.stories.length > 0">Consists of {{book.stories.length}} stories.</td>
                 <td>{{book.isbn | substrIsbn}}</td>
                 <td>{{book.review | substrReview}}</td>
                 <td>
                     <div id="table-btns">
                         <button id="btn-info" class="btn btn-table">Info</button>
-                        <button class="btn btn-edit btn-table">Edit</button>
+                        <button *ngIf="book.stories.length == 0; else elseBlock" class="btn btn-edit btn-table" [routerLink]="[id, 'edit-novel']">Edit</button>
+                        <ng-template #elseBlock><button class="btn btn-edit btn-table" [routerLink]="[id, 'edit-anthology']">Edit</button></ng-template>
                         <button id="btn-delete" class="btn" (click)="onDeleteBook(id)">X</button>
                     </div>
                 </td>
