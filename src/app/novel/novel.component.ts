@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Book } from '../shared/book.model';
@@ -77,15 +77,15 @@ export class NovelComponent implements OnInit {
     }
     
     this.novelForm = new FormGroup({
-      'title': new FormControl(novelTitle),
-      'author': new FormControl(novelAuthor),
+      'title': new FormControl(novelTitle, Validators.required),
+      'author': new FormControl(novelAuthor, Validators.required),
       'publisher': new FormControl(novelPublisher),
-      'year': new FormControl(novelYear),
-      'pages': new FormControl(novelPages),
+      'year': new FormControl(novelYear, Validators.max(new Date().getFullYear())),
+      'pages': new FormControl(novelPages, Validators.min(1)),
       'series': new FormControl(novelSeries),
       'seriesnum': new FormControl(novelSeriesNum),
       'stories': novelStories,
-      'isbn': new FormControl(novelIsbn),
+      'isbn': new FormControl(novelIsbn, Validators.pattern(/^\d{13}$/)),
       'review': new FormControl(novelReview)
     })
     

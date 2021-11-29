@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormArray, FormControl } from '@angular/forms';
+import { FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { BookService } from '../shared/book.service';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 
@@ -95,12 +95,12 @@ export class AnthologyComponent implements OnInit {
     }
 
     this.anthologyForm = new FormGroup ({
-      'title': new FormControl(anthologyTitle),
-      'author': new FormControl(anthologyEditor),
+      'title': new FormControl(anthologyTitle, Validators.required),
+      'author': new FormControl(anthologyEditor, Validators.required),
       'publisher': new FormControl(anthologyPublisher),
-      'year': new FormControl(anthologyYear),
-      'pages': new FormControl(anthologyPages),
-      'isbn': new FormControl(anthologyIsbn),
+      'year': new FormControl(anthologyYear, Validators.max(new Date().getFullYear())),
+      'pages': new FormControl(anthologyPages, Validators.min(1)),
+      'isbn': new FormControl(anthologyIsbn, Validators.pattern(/^\d{13}$/)),
       'stories': anthologyStories,
       'review': new FormControl(anthologyReview)
     });
